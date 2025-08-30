@@ -53,13 +53,14 @@ export default function Index() {
     { id: "th5", course: "SDOOP", location: "AB-5 · R.02 (LG-02)", day: "Thu", start: "15:30", end: "16:30", color: "from-rose-500 to-pink-500" },
 
     { id: "f1", course: "ML", location: "AB-5 · R.02 (LG-02)", day: "Fri", start: "08:00", end: "09:00", color: "from-emerald-500 to-teal-500" },
-    { id: "f2", course: "DMS", location: "AB-5 · R.02 (LG-02)", day: "Fri", start: "10:30", end: "11:30", color: "from-indigo-500 to-blue-500" },
+    { id: "f2", course: "DMS", location: "AB-5 �� R.02 (LG-02)", day: "Fri", start: "10:30", end: "11:30", color: "from-indigo-500 to-blue-500" },
     { id: "f3", course: "MATHS-III", location: "AB-5 · R.02 (LG-02)", day: "Fri", start: "11:30", end: "12:30", color: "from-violet-600 to-fuchsia-600" },
 
     { id: "s1", course: "DMS LAB + MINI PROJECT", location: "DMS Lab · L-03", day: "Sat", start: "09:00", end: "12:00", color: "from-indigo-600 to-blue-600" },
   ]);
 
   const [events, setEvents] = useState<UniEvent[]>([
+    ...getProvidedEvents(),
     { id: "e1", title: "Robotics Club", date: toISO(new Date()), time: "17:00" },
     { id: "e2", title: "Lab report due", date: addDaysISO(new Date(), 1) },
   ]);
@@ -109,7 +110,23 @@ export default function Index() {
                 mode="single"
                 selected={selectedDate}
                 onSelect={setSelectedDate}
-                className="rounded-lg border"
+                className="rounded-xl bg-neutral-900 p-4 text-neutral-100"
+                classNames={{
+                  caption: "flex items-center justify-center relative pb-2",
+                  caption_label: "text-base font-medium",
+                  nav: "space-x-1 flex items-center",
+                  nav_button: "h-8 w-8 rounded-md text-neutral-300 hover:bg-neutral-800 p-0",
+                  nav_button_previous: "absolute left-2",
+                  nav_button_next: "absolute right-2",
+                  head_row: "flex",
+                  head_cell: "w-9 text-center text-xs text-neutral-400",
+                  row: "flex w-full mt-1",
+                  cell: "h-9 w-9 text-center p-0 relative",
+                  day: "h-9 w-9 rounded-full text-sm hover:bg-neutral-800",
+                  day_selected: "bg-blue-500 text-white",
+                  day_outside: "text-neutral-500 opacity-50",
+                  day_today: "ring-1 ring-blue-500",
+                }}
               />
 
               <div className="space-y-2">
@@ -448,8 +465,20 @@ function iso(y: number, m: number, d: number) {
 }
 
 function AutoImportAll({ onImport }: { onImport: (items: UniEvent[]) => void }) {
-  const items: UniEvent[] = [
-    // Odd Sem 2025 (Jul–Jan)
+  const items = getProvidedEvents();
+  return (
+    <Button variant="secondary" size="sm" onClick={() => onImport(items)}>
+      Import All (Provided)
+    </Button>
+  );
+}
+
+function cryptoId() {
+  return Math.random().toString(36).slice(2);
+}
+
+function getProvidedEvents(): UniEvent[] {
+  return [
     { id: cryptoId(), title: "Commencement of III Semester classes", date: iso(2025, 7, 14) },
     { id: cryptoId(), title: "I year Orientation Program", date: iso(2025, 8, 9) },
     { id: cryptoId(), title: "I Sem classes start", date: iso(2025, 8, 11) },
@@ -471,22 +500,18 @@ function AutoImportAll({ onImport }: { onImport: (items: UniEvent[]) => void }) 
     { id: cryptoId(), title: "Moderation of Answerscript", date: iso(2025, 12, 16) },
     { id: cryptoId(), title: "Christmas", date: iso(2025, 12, 25) },
     { id: cryptoId(), title: "Last date to apply for make up exam I & III Sem", date: iso(2025, 12, 26) },
-
-    // Jan 2026 bridge
+    { id: cryptoId(), title: "Make up exam starts – I & III Sem", date: iso(2026, 1, 1) },
     { id: cryptoId(), title: "Commencement of II & IV Sem", date: iso(2026, 1, 5) },
     { id: cryptoId(), title: "End Semester Exam Ends – I & III Sem", date: iso(2026, 1, 6) },
     { id: cryptoId(), title: "Make up exam ends – I & III Sem", date: iso(2026, 1, 8) },
-    { id: cryptoId(), title: "Make up exam starts – I & III Sem", date: iso(2026, 1, 1) },
     { id: cryptoId(), title: "Make up exam Results – I & III Sem", date: iso(2026, 1, 19) },
     { id: cryptoId(), title: "Republic Day", date: iso(2026, 1, 26) },
-
-    // Even Sem 2026 (Feb–Jul)
     { id: cryptoId(), title: "I Test (II & IV Sem)", date: iso(2026, 2, 7) },
     { id: cryptoId(), title: "I Test (II & IV Sem)", date: iso(2026, 2, 9) },
     { id: cryptoId(), title: "Sports Day", date: iso(2026, 2, 14) },
     { id: cryptoId(), title: "Holi · Holiday for students only", date: iso(2026, 3, 4) },
-    { id: cryptoId(), title: "II Test – II & IV Sem", date: iso(2026, 3, 16) },
     { id: cryptoId(), title: "Last Instructional Day – II & IV Sem", date: iso(2026, 3, 14) },
+    { id: cryptoId(), title: "II Test – II & IV Sem", date: iso(2026, 3, 16) },
     { id: cryptoId(), title: "End Sem Exam starts – II & IV Sem", date: iso(2026, 3, 17) },
     { id: cryptoId(), title: "Good Friday", date: iso(2026, 4, 3) },
     { id: cryptoId(), title: "UTSAV", date: iso(2026, 4, 7) },
@@ -501,16 +526,6 @@ function AutoImportAll({ onImport }: { onImport: (items: UniEvent[]) => void }) 
     { id: cryptoId(), title: "Make up ends – II & IV Sem", date: iso(2026, 6, 5) },
     { id: cryptoId(), title: "III Sem. Classes Start", date: iso(2026, 7, 13) },
   ];
-
-  return (
-    <Button variant="secondary" size="sm" onClick={() => onImport(items)}>
-      Import All (Provided)
-    </Button>
-  );
-}
-
-function cryptoId() {
-  return Math.random().toString(36).slice(2);
 }
 
 function SubjectsCard() {
