@@ -26,6 +26,8 @@ type UniEvent = {
   time?: string; // HH:MM
 };
 
+type PlanKey = "III_CSE" | "I_SEM";
+
 const DAYS: Session["day"][] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const START_HOUR = 8;
 const END_HOUR = 18;
