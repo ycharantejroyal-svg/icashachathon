@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
+import { toast } from "@/hooks/use-toast";
 
 type Session = {
   id: string;
@@ -31,6 +32,12 @@ const START_HOUR = 8;
 const END_HOUR = 18;
 
 export default function Index() {
+  const [canEdit, setCanEdit] = useState(false);
+  const [askPwdOpen, setAskPwdOpen] = useState(false);
+  const requireAuth = () => {
+    toast({ title: "Editing locked", description: "Enter password to make changes" });
+    setAskPwdOpen(true);
+  };
   const [sessions, setSessions] = useState<Session[]>([
     { id: "m1", course: "MATHS-III", location: "AB-5 · R.02 (LG-02)", day: "Mon", start: "09:00", end: "10:00", color: "from-violet-600 to-fuchsia-600" },
     { id: "m2", course: "DAA", location: "AB-5 · R.02 (LG-02)", day: "Mon", start: "10:30", end: "11:30", color: "from-sky-500 to-cyan-500" },
@@ -83,11 +90,24 @@ export default function Index() {
             <CardHeader className="pb-4">
               <CardTitle className="flex items-center justify-between">
                 <span>Class Timetable</span>
-                <AddClass existingSessions={sessions} onAdd={(s) => setSessions((prev) => [...prev, s])} />
+                <div className="flex items-center gap-2">
+                  {!canEdit ? (
+                    <Button size="sm" variant="outline" onClick={() => setAskPwdOpen(true)}>Unlock</Button>
+                  ) : (
+                    <Button size="sm" variant="outline" onClick={() => setCanEdit(false)}>Lock</Button>
+                  )}
+                  <AddClass canEdit={canEdit} onRequireAuth={requireAuth} existingSessions={sessions} onAdd={(s) => setSessions((prev) => [...prev, s])} />
+                </div>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <Timetable sessions={sessions} onDelete={(id) => setSessions((prev) => prev.filter((s) => s.id !== id))} />
+              <Timetable
+                sessions={sessions}
+                onDelete={(id) => {
+                  if (!canEdit) return requireAuth();
+                  setSessions((prev) => prev.filter((s) => s.id !== id));
+                }}
+              />
             </CardContent>
           </Card>
         </div>
@@ -97,9 +117,16 @@ export default function Index() {
               <CardTitle className="flex items-center justify-between">
                 <span>Calendar & Events</span>
                 <div className="flex items-center gap-2">
-                  <AutoImportAll onImport={(items) => setEvents((prev) => [...prev, ...items])} />
-                  <ImportAcademic onImport={(items) => setEvents((prev) => [...prev, ...items])} />
+                  {!canEdit ? (
+                    <Button size="sm" variant="outline" onClick={() => setAskPwdOpen(true)}>Unlock</Button>
+                  ) : (
+                    <Button size="sm" variant="outline" onClick={() => setCanEdit(false)}>Lock</Button>
+                  )}
+                  <AutoImportAll canEdit={canEdit} onRequireAuth={requireAuth} onImport={(items) => setEvents((prev) => [...prev, ...items])} />
+                  <ImportAcademic canEdit={canEdit} onRequireAuth={requireAuth} onImport={(items) => setEvents((prev) => [...prev, ...items])} />
                   <AddEvent
+                    canEdit={canEdit}
+                    onRequireAuth={requireAuth}
                     onAdd={(e) => setEvents((prev) => [...prev, e])}
                     defaultDate={selectedDate}
                   />
@@ -153,9 +180,10 @@ export default function Index() {
                       </div>
                       <Button
                         variant="ghost"
-                        onClick={() =>
-                          setEvents((prev) => prev.filter((x) => x.id !== e.id))
-                        }
+                        onClick={() => {
+                          if (!canEdit) return requireAuth();
+                          setEvents((prev) => prev.filter((x) => x.id !== e.id));
+                        }}
                       >
                         Remove
                       </Button>
@@ -169,6 +197,31 @@ export default function Index() {
           </Card>
         </div>
       </section>
+      <Dialog open={askPwdOpen} onOpenChange={setAskPwdOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Enter password to edit</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-3">
+            <div>
+              <Label htmlFor="pwd">Password</Label>
+              <Input id="pwd" type="password" onChange={(e) => (e.target as HTMLInputElement).value} />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button onClick={() => {
+              const input = (document.getElementById("pwd") as HTMLInputElement)?.value || "";
+              if (input === "hehe") {
+                setCanEdit(true);
+                setAskPwdOpen(false);
+                toast({ title: "Unlocked", description: "You can now edit the calendar" });
+              } else {
+                toast({ title: "Incorrect password" });
+              }
+            }}>Unlock</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
@@ -231,8 +284,8 @@ function Timetable({ sessions, onDelete }: { sessions: Session[]; onDelete: (id:
           className="grid"
           style={{ gridTemplateRows: `repeat(${rows}, minmax(24px, 1fr))` }}
         >
-          {times.slice(0, -1).map((t) => (
-            <div key={t} className="text-xs text-muted-foreground">
+          {times.slice(0, -1).map((t, i) => (
+            <div key={t} className="text-xs text-muted-foreground" style={{ gridRow: `${i * 2 + 1} / span 2` }}>
               {t}
             </div>
           ))}
@@ -295,7 +348,7 @@ function Timetable({ sessions, onDelete }: { sessions: Session[]; onDelete: (id:
   );
 }
 
-function AddClass({ onAdd, existingSessions }: { onAdd: (s: Session) => void; existingSessions: Session[] }) {
+function AddClass({ onAdd, existingSessions, canEdit, onRequireAuth }: { onAdd: (s: Session) => void; existingSessions: Session[]; canEdit: boolean; onRequireAuth: () => void }) {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState<
     Omit<Session, "id" | "color"> & { color: Session["color"] }
@@ -310,11 +363,16 @@ function AddClass({ onAdd, existingSessions }: { onAdd: (s: Session) => void; ex
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="secondary" size="sm">
-          Add Class
-        </Button>
-      </DialogTrigger>
+      <Button
+        variant="secondary"
+        size="sm"
+        onClick={() => {
+          if (!canEdit) return onRequireAuth();
+          setOpen(true);
+        }}
+      >
+        Add Class
+      </Button>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add class to timetable</DialogTitle>
@@ -414,9 +472,13 @@ function AddClass({ onAdd, existingSessions }: { onAdd: (s: Session) => void; ex
 function AddEvent({
   onAdd,
   defaultDate,
+  canEdit,
+  onRequireAuth,
 }: {
   onAdd: (e: UniEvent) => void;
   defaultDate?: Date;
+  canEdit: boolean;
+  onRequireAuth: () => void;
 }) {
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
@@ -425,11 +487,16 @@ function AddEvent({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="secondary" size="sm">
-          Add Event
-        </Button>
-      </DialogTrigger>
+      <Button
+        variant="secondary"
+        size="sm"
+        onClick={() => {
+          if (!canEdit) return onRequireAuth();
+          setOpen(true);
+        }}
+      >
+        Add Event
+      </Button>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add calendar event</DialogTitle>
@@ -496,10 +563,10 @@ function iso(y: number, m: number, d: number) {
   return `${y}-${mm}-${dd}`;
 }
 
-function AutoImportAll({ onImport }: { onImport: (items: UniEvent[]) => void }) {
+function AutoImportAll({ onImport, canEdit, onRequireAuth }: { onImport: (items: UniEvent[]) => void; canEdit: boolean; onRequireAuth: () => void }) {
   const items = getProvidedEvents();
   return (
-    <Button variant="secondary" size="sm" onClick={() => onImport(items)}>
+    <Button variant="secondary" size="sm" onClick={() => (canEdit ? onImport(items) : onRequireAuth())}>
       Import All (Provided)
     </Button>
   );
@@ -587,7 +654,7 @@ function SubjectsCard() {
   );
 }
 
-function ImportAcademic({ onImport }: { onImport: (items: UniEvent[]) => void }) {
+function ImportAcademic({ onImport, canEdit, onRequireAuth }: { onImport: (items: UniEvent[]) => void; canEdit: boolean; onRequireAuth: () => void }) {
   const [open, setOpen] = useState(false);
   const [month, setMonth] = useState<number>(7); // 1-12
   const [year, setYear] = useState<number>(2025);
@@ -625,9 +692,10 @@ function ImportAcademic({ onImport }: { onImport: (items: UniEvent[]) => void })
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline" size="sm">Import Month</Button>
-      </DialogTrigger>
+      <Button variant="outline" size="sm" onClick={() => {
+        if (!canEdit) return onRequireAuth();
+        setOpen(true);
+      }}>Import Month</Button>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Import academic month</DialogTitle>
