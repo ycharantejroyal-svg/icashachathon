@@ -439,3 +439,99 @@ function addDaysISO(d: Date, days: number) {
   nd.setDate(d.getDate() + days);
   return toISO(nd);
 }
+
+function SubjectsCard() {
+  const subjects = [
+    { code: "IMA 231", name: "MATHEMATICS – III", faculty: "Dr. Harinakshi Karkera" },
+    { code: "ICS 231", name: "DATABASE MANAGEMENT SYSTEMS", faculty: "Dr. Nagaraj Naik" },
+    { code: "ICS 232", name: "SOFTWARE DESIGN USING OBJECT ORIENTED PARADIGM", faculty: "Dr. Srikanth Prabhu" },
+    { code: "ICS 233", name: "DESIGN AND ANALYSIS OF ALGORITHMS", faculty: "Mrs. Arti Pawar" },
+    { code: "ICS 234", name: "DATA ANALYTICS WITH PYTHON", faculty: "Dr. Cenitta D" },
+    { code: "ICS 235", name: "MACHINE LEARNING", faculty: "Dr. Nagaraj Naik" },
+    { code: "ICS 231", name: "DMS LAB + MINI PROJECT", faculty: "Dr. Nagaraj Naik, Mrs. Arti Pawar" },
+    { code: "ICS 232", name: "SDOOP LAB", faculty: "Dr. Nagaraj Naik, Mrs. Arti Pawar" },
+  ];
+  return (
+    <div className="rounded-lg border p-4">
+      <h4 className="mb-2 text-sm font-semibold">III Semester · CSE · Subjects & Faculty</h4>
+      <ul className="grid gap-1 text-sm md:grid-cols-2">
+        {subjects.map((s) => (
+          <li key={s.code + s.name} className="flex items-start justify-between gap-4">
+            <span className="font-medium">{s.name} <span className="text-xs text-muted-foreground">({s.code})</span></span>
+            <span className="text-xs text-muted-foreground">{s.faculty}</span>
+          </li>
+        ))}
+      </ul>
+      <p className="mt-3 text-xs text-muted-foreground">Lecture Hall: AB-5 · R. 02 (LG-02). Lab Location: SDOOP Lab and DMS Lab (Computing Lab-03, Floor-0).</p>
+    </div>
+  );
+}
+
+function ImportAcademic({ onImport }: { onImport: (items: UniEvent[]) => void }) {
+  const [open, setOpen] = useState(false);
+  const [month, setMonth] = useState<number>(7); // 1-12
+  const [year, setYear] = useState<number>(2025);
+  const [text, setText] = useState<string>("");
+
+  const parseLines = () => {
+    const lines = text.split(/\r?\n/);
+    const items: UniEvent[] = [];
+    let lastWithEvent: UniEvent | null = null;
+    for (const raw of lines) {
+      const line = raw.trim();
+      if (!line) continue;
+      const m = line.match(/^(\d{1,2})\s+([A-Za-z]+)(?:\s+(.*))?$/);
+      if (m) {
+        const day = parseInt(m[1], 10);
+        const rest = (m[3] || "").trim();
+        const date = toISO(new Date(year, month - 1, day));
+        const id = `${date}-${Math.random().toString(36).slice(2)}`;
+        const title = rest || "";
+        const evt: UniEvent = { id, title: title || "", date };
+        if (title) {
+          items.push(evt);
+          lastWithEvent = evt;
+        } else {
+          lastWithEvent = null;
+        }
+      } else if (lastWithEvent) {
+        lastWithEvent.title = `${lastWithEvent.title} ${line}`.trim();
+      }
+    }
+    onImport(items.filter((i) => i.title));
+    setOpen(false);
+    setText("");
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button variant="outline" size="sm">Import Month</Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Import academic month</DialogTitle>
+        </DialogHeader>
+        <div className="grid gap-3">
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <Label htmlFor="month">Month</Label>
+              <Input id="month" type="number" min={1} max={12} value={month} onChange={(e) => setMonth(parseInt(e.target.value || "1", 10))} />
+            </div>
+            <div>
+              <Label htmlFor="year">Year</Label>
+              <Input id="year" type="number" value={year} onChange={(e) => setYear(parseInt(e.target.value || "2025", 10))} />
+            </div>
+          </div>
+          <div>
+            <Label htmlFor="txt">Paste one month column (e.g. \"1 W Event\")</Label>
+            <Textarea id="txt" rows={8} value={text} onChange={(e) => setText(e.target.value)} placeholder="1 W Make up exam starts-I & III Sem\n2 T\n3 W\n4 TH\n..." />
+          </div>
+        </div>
+        <DialogFooter>
+          <Button onClick={parseLines}>Import</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
