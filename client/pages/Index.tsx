@@ -31,6 +31,7 @@ type PlanKey = "III_CSE" | "I_SEM";
 const DAYS: Session["day"][] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const START_HOUR = 8;
 const END_HOUR = 18;
+const ROW_HEIGHT = 28;
 
 export default function Index() {
   const [canEdit, setCanEdit] = useState(false);
@@ -308,7 +309,7 @@ function Timetable({ sessions, onDelete }: { sessions: Session[]; onDelete: (id:
       <div className="col-span-1">
         <div
           className="grid"
-          style={{ gridTemplateRows: `repeat(${rows}, minmax(24px, 1fr))` }}
+          style={{ gridTemplateRows: `repeat(${rows}, ${ROW_HEIGHT}px)` }}
         >
           {times.slice(0, -1).map((t, i) => (
             <div key={t} className="text-xs text-muted-foreground" style={{ gridRow: `${i * 2 + 1} / span 2` }}>
@@ -322,7 +323,7 @@ function Timetable({ sessions, onDelete }: { sessions: Session[]; onDelete: (id:
           <div className="mb-2 text-center text-sm font-medium">{day}</div>
           <div
             className="grid rounded-md border bg-background"
-            style={{ gridTemplateRows: `repeat(${rows}, minmax(24px, 1fr))` }}
+            style={{ gridTemplateRows: `repeat(${rows}, ${ROW_HEIGHT}px)` }}
           >
             {/* grid lines */}
             {Array.from({ length: rows }).map((_, i) => (
