@@ -441,6 +441,78 @@ function addDaysISO(d: Date, days: number) {
   return toISO(nd);
 }
 
+function iso(y: number, m: number, d: number) {
+  const mm = String(m).padStart(2, "0");
+  const dd = String(d).padStart(2, "0");
+  return `${y}-${mm}-${dd}`;
+}
+
+function AutoImportAll({ onImport }: { onImport: (items: UniEvent[]) => void }) {
+  const items: UniEvent[] = [
+    // Odd Sem 2025 (Jul–Jan)
+    { id: cryptoId(), title: "Commencement of III Semester classes", date: iso(2025, 7, 14) },
+    { id: cryptoId(), title: "I year Orientation Program", date: iso(2025, 8, 9) },
+    { id: cryptoId(), title: "I Sem classes start", date: iso(2025, 8, 11) },
+    { id: cryptoId(), title: "I Test (III Sem)", date: iso(2025, 8, 23) },
+    { id: cryptoId(), title: "I Test (I Sem)", date: iso(2025, 8, 25) },
+    { id: cryptoId(), title: "Vinayaka Chaturthi", date: iso(2025, 8, 27) },
+    { id: cryptoId(), title: "REVERB", date: iso(2025, 9, 13) },
+    { id: cryptoId(), title: "III Sem-II test & I Sem I test", date: iso(2025, 9, 30) },
+    { id: cryptoId(), title: "Maha Navami", date: iso(2025, 10, 1) },
+    { id: cryptoId(), title: "Gandhi Jayanti", date: iso(2025, 10, 2) },
+    { id: cryptoId(), title: "Make-up Test-III Sem", date: iso(2025, 10, 8) },
+    { id: cryptoId(), title: "Deepavali", date: iso(2025, 10, 20) },
+    { id: cryptoId(), title: "Karnataka Rajyotsava", date: iso(2025, 11, 1) },
+    { id: cryptoId(), title: "Make-up Test-I Sem", date: iso(2025, 11, 10) },
+    { id: cryptoId(), title: "Last Instructional Day-I Sem", date: iso(2025, 11, 19) },
+    { id: cryptoId(), title: "End Semester Exam Starts – I & III Sem", date: iso(2025, 11, 24) },
+    { id: cryptoId(), title: "Paper Seeing", date: iso(2025, 12, 13) },
+    { id: cryptoId(), title: "Last Working Day · Moderation of Answerscript", date: iso(2025, 12, 15) },
+    { id: cryptoId(), title: "Moderation of Answerscript", date: iso(2025, 12, 16) },
+    { id: cryptoId(), title: "Christmas", date: iso(2025, 12, 25) },
+    { id: cryptoId(), title: "Last date to apply for make up exam I & III Sem", date: iso(2025, 12, 26) },
+
+    // Jan 2026 bridge
+    { id: cryptoId(), title: "Commencement of II & IV Sem", date: iso(2026, 1, 5) },
+    { id: cryptoId(), title: "End Semester Exam Ends – I & III Sem", date: iso(2026, 1, 6) },
+    { id: cryptoId(), title: "Make up exam ends – I & III Sem", date: iso(2026, 1, 8) },
+    { id: cryptoId(), title: "Make up exam starts – I & III Sem", date: iso(2026, 1, 1) },
+    { id: cryptoId(), title: "Make up exam Results – I & III Sem", date: iso(2026, 1, 19) },
+    { id: cryptoId(), title: "Republic Day", date: iso(2026, 1, 26) },
+
+    // Even Sem 2026 (Feb–Jul)
+    { id: cryptoId(), title: "I Test (II & IV Sem)", date: iso(2026, 2, 7) },
+    { id: cryptoId(), title: "I Test (II & IV Sem)", date: iso(2026, 2, 9) },
+    { id: cryptoId(), title: "Sports Day", date: iso(2026, 2, 14) },
+    { id: cryptoId(), title: "Holi · Holiday for students only", date: iso(2026, 3, 4) },
+    { id: cryptoId(), title: "II Test – II & IV Sem", date: iso(2026, 3, 16) },
+    { id: cryptoId(), title: "Last Instructional Day – II & IV Sem", date: iso(2026, 3, 14) },
+    { id: cryptoId(), title: "End Sem Exam starts – II & IV Sem", date: iso(2026, 3, 17) },
+    { id: cryptoId(), title: "Good Friday", date: iso(2026, 4, 3) },
+    { id: cryptoId(), title: "UTSAV", date: iso(2026, 4, 7) },
+    { id: cryptoId(), title: "End Sem exams starts – II & IV Sem", date: iso(2026, 4, 17) },
+    { id: cryptoId(), title: "May Day", date: iso(2026, 5, 1) },
+    { id: cryptoId(), title: "End Sem. Exam Ends – II & IV Sem", date: iso(2026, 5, 2) },
+    { id: cryptoId(), title: "Paper Seeing", date: iso(2026, 5, 8) },
+    { id: cryptoId(), title: "Last Working Day · Moderation of Answerscript", date: iso(2026, 5, 11) },
+    { id: cryptoId(), title: "Moderation of Answerscript", date: iso(2026, 5, 12) },
+    { id: cryptoId(), title: "Results – II & IV Sem", date: iso(2026, 5, 18) },
+    { id: cryptoId(), title: "Make up starts – II & IV Sem", date: iso(2026, 6, 1) },
+    { id: cryptoId(), title: "Make up ends – II & IV Sem", date: iso(2026, 6, 5) },
+    { id: cryptoId(), title: "III Sem. Classes Start", date: iso(2026, 7, 13) },
+  ];
+
+  return (
+    <Button variant="secondary" size="sm" onClick={() => onImport(items)}>
+      Import All (Provided)
+    </Button>
+  );
+}
+
+function cryptoId() {
+  return Math.random().toString(36).slice(2);
+}
+
 function SubjectsCard() {
   const subjects = [
     { code: "IMA 231", name: "MATHEMATICS – III", faculty: "Dr. Harinakshi Karkera" },
