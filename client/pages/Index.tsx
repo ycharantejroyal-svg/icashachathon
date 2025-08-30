@@ -69,6 +69,27 @@ export default function Index() {
     { id: "s1", course: "DMS LAB + MINI PROJECT", location: "DMS Lab · L-03", day: "Sat", start: "09:00", end: "12:00", color: "from-indigo-600 to-blue-600" },
   ]);
 
+  const [iSessions, setISessions] = useState<Session[]>([
+    { id: "i1", course: "CSIE", location: "AB-5 · R.06 (LG-01)", day: "Tue", start: "10:00", end: "11:00", color: "from-fuchsia-500 to-pink-500" },
+    { id: "i2", course: "MATHS-I", location: "AB-5 · R.06 (LG-01)", day: "Tue", start: "11:00", end: "12:00", color: "from-violet-600 to-indigo-600" },
+    { id: "i3", course: "PSUC LAB", location: "PSUC Lab · 1F AB-5", day: "Tue", start: "15:30", end: "17:30", color: "from-emerald-500 to-teal-500" },
+    { id: "i4", course: "EPSY", location: "AB-5 · R.06 (LG-01)", day: "Thu", start: "08:00", end: "09:00", color: "from-rose-500 to-orange-500" },
+    { id: "i5", course: "MATHS-I", location: "AB-5 · R.06 (LG-01)", day: "Thu", start: "09:00", end: "10:00", color: "from-violet-600 to-indigo-600" },
+    { id: "i6", course: "PSUC", location: "AB-5 · R.06 (LG-01)", day: "Thu", start: "11:30", end: "12:30", color: "from-sky-500 to-cyan-500" },
+    { id: "i7", course: "EG LAB", location: "EG Lab · AB-5 R.06", day: "Fri", start: "10:00", end: "12:00", color: "from-amber-500 to-yellow-500" },
+    { id: "i8", course: "CSIE", location: "AB-5 · R.06 (LG-01)", day: "Fri", start: "13:00", end: "14:00", color: "from-fuchsia-500 to-pink-500" },
+    { id: "i9", course: "MATHS-I", location: "AB-5 · R.06 (LG-01)", day: "Fri", start: "15:30", end: "16:30", color: "from-violet-600 to-indigo-600" },
+    { id: "i10", course: "EPSY", location: "AB-5 · R.06 (LG-01)", day: "Sat", start: "08:00", end: "09:00", color: "from-rose-500 to-orange-500" },
+    { id: "i11", course: "MOS", location: "AB-5 · R.06 (LG-01)", day: "Sat", start: "10:30", end: "11:30", color: "from-lime-500 to-emerald-500" },
+    { id: "i12", course: "PHYSICS-I", location: "AB-5 · R.06 (LG-01)", day: "Sat", start: "11:30", end: "12:30", color: "from-blue-500 to-cyan-500" },
+    { id: "i13", course: "EPSY", location: "AB-5 · R.06 (LG-01)", day: "Mon", start: "13:00", end: "14:00", color: "from-rose-500 to-orange-500" },
+    { id: "i14", course: "MATHS-I", location: "AB-5 · R.06 (LG-01)", day: "Mon", start: "14:00", end: "15:00", color: "from-violet-600 to-indigo-600" },
+    { id: "i15", course: "PSUC", location: "AB-5 · R.06 (LG-01)", day: "Mon", start: "15:30", end: "16:30", color: "from-sky-500 to-cyan-500" },
+    { id: "i16", course: "MOS", location: "AB-5 · R.06 (LG-01)", day: "Mon", start: "16:30", end: "17:30", color: "from-lime-500 to-emerald-500" },
+  ]);
+
+  const currentSessions = plan === "III_CSE" ? sessions : iSessions;
+
   const [events, setEvents] = useState<UniEvent[]>([
     ...getProvidedEvents(),
     { id: "e1", title: "Robotics Club", date: toISO(new Date()), time: "17:00" },
