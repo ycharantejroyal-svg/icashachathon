@@ -94,10 +94,13 @@ export default function Index() {
             <CardHeader className="pb-2">
               <CardTitle className="flex items-center justify-between">
                 <span>Calendar & Events</span>
-                <AddEvent
-                  onAdd={(e) => setEvents((prev) => [...prev, e])}
-                  defaultDate={selectedDate}
-                />
+                <div className="flex items-center gap-2">
+                  <ImportAcademic onImport={(items) => setEvents((prev) => [...prev, ...items])} />
+                  <AddEvent
+                    onAdd={(e) => setEvents((prev) => [...prev, e])}
+                    defaultDate={selectedDate}
+                  />
+                </div>
               </CardTitle>
             </CardHeader>
             <CardContent className="grid gap-4">
@@ -141,6 +144,8 @@ export default function Index() {
                   ))}
                 </ul>
               </div>
+
+              <SubjectsCard />
             </CardContent>
           </Card>
         </div>
