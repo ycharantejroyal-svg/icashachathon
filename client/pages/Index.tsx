@@ -127,10 +127,11 @@ export default function Index() {
             </CardHeader>
             <CardContent>
               <Timetable
-                sessions={sessions}
+                sessions={currentSessions}
                 onDelete={(id) => {
                   if (!canEdit) return requireAuth();
-                  setSessions((prev) => prev.filter((s) => s.id !== id));
+                  if (plan === "III_CSE") setSessions((prev) => prev.filter((s) => s.id !== id));
+                  else setISessions((prev) => prev.filter((s) => s.id !== id));
                 }}
               />
             </CardContent>
