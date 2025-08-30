@@ -95,6 +95,7 @@ export default function Index() {
               <CardTitle className="flex items-center justify-between">
                 <span>Calendar & Events</span>
                 <div className="flex items-center gap-2">
+                  <AutoImportAll onImport={(items) => setEvents((prev) => [...prev, ...items])} />
                   <ImportAcademic onImport={(items) => setEvents((prev) => [...prev, ...items])} />
                   <AddEvent
                     onAdd={(e) => setEvents((prev) => [...prev, e])}
