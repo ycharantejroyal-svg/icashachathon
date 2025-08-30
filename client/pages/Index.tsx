@@ -562,23 +562,23 @@ function getProvidedEvents(): UniEvent[] {
 
 function SubjectsCard() {
   const subjects = [
-    { code: "IMA 231", name: "MATHEMATICS – III", faculty: "Dr. Harinakshi Karkera" },
-    { code: "ICS 231", name: "DATABASE MANAGEMENT SYSTEMS", faculty: "Dr. Nagaraj Naik" },
-    { code: "ICS 232", name: "SOFTWARE DESIGN USING OBJECT ORIENTED PARADIGM", faculty: "Dr. Srikanth Prabhu" },
-    { code: "ICS 233", name: "DESIGN AND ANALYSIS OF ALGORITHMS", faculty: "Mrs. Arti Pawar" },
-    { code: "ICS 234", name: "DATA ANALYTICS WITH PYTHON", faculty: "Dr. Cenitta D" },
-    { code: "ICS 235", name: "MACHINE LEARNING", faculty: "Dr. Nagaraj Naik" },
-    { code: "ICS 231", name: "DMS LAB + MINI PROJECT", faculty: "Dr. Nagaraj Naik, Mrs. Arti Pawar" },
-    { code: "ICS 232", name: "SDOOP LAB", faculty: "Dr. Nagaraj Naik, Mrs. Arti Pawar" },
+    { code: "IMA 231", name: "MATHEMATICS – III" },
+    { code: "ICS 231", name: "DATABASE MANAGEMENT SYSTEMS" },
+    { code: "ICS 232", name: "SOFTWARE DESIGN USING OBJECT ORIENTED PARADIGM" },
+    { code: "ICS 233", name: "DESIGN AND ANALYSIS OF ALGORITHMS" },
+    { code: "ICS 234", name: "DATA ANALYTICS WITH PYTHON" },
+    { code: "ICS 235", name: "MACHINE LEARNING" },
+    { code: "ICS 231", name: "DMS LAB + MINI PROJECT" },
+    { code: "ICS 232", name: "SDOOP LAB" },
   ];
   return (
     <div className="rounded-lg border p-4">
-      <h4 className="mb-2 text-sm font-semibold">III Semester · CSE · Subjects & Faculty</h4>
+      <h4 className="mb-2 text-sm font-semibold">III Semester · CSE · Subjects</h4>
       <ul className="grid gap-1 text-sm md:grid-cols-2">
         {subjects.map((s) => (
-          <li key={s.code + s.name} className="flex items-start justify-between gap-4">
-            <span className="font-medium">{s.name} <span className="text-xs text-muted-foreground">({s.code})</span></span>
-            <span className="text-xs text-muted-foreground">{s.faculty}</span>
+          <li key={s.code + s.name} className="flex items-start gap-2">
+            <span className="font-medium">{s.name}</span>
+            <span className="text-xs text-muted-foreground">({s.code})</span>
           </li>
         ))}
       </ul>
