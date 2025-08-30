@@ -12,7 +12,7 @@ type Session = {
   id: string;
   course: string;
   location: string;
-  day: "Mon" | "Tue" | "Wed" | "Thu" | "Fri";
+  day: "Mon" | "Tue" | "Wed" | "Thu" | "Fri" | "Sat";
   start: string; // HH:MM
   end: string; // HH:MM
   color: string; // tailwind color class suffix e.g. "from-indigo-500 to-violet-500"
