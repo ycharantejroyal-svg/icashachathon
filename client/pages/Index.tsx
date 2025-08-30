@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import { toast } from "@/hooks/use-toast";
 
 type Session = {
   id: string;
@@ -53,7 +54,7 @@ export default function Index() {
     { id: "th5", course: "SDOOP", location: "AB-5 · R.02 (LG-02)", day: "Thu", start: "15:30", end: "16:30", color: "from-rose-500 to-pink-500" },
 
     { id: "f1", course: "ML", location: "AB-5 · R.02 (LG-02)", day: "Fri", start: "08:00", end: "09:00", color: "from-emerald-500 to-teal-500" },
-    { id: "f2", course: "DMS", location: "AB-5 �� R.02 (LG-02)", day: "Fri", start: "10:30", end: "11:30", color: "from-indigo-500 to-blue-500" },
+    { id: "f2", course: "DMS", location: "AB-5 · R.02 (LG-02)", day: "Fri", start: "10:30", end: "11:30", color: "from-indigo-500 to-blue-500" },
     { id: "f3", course: "MATHS-III", location: "AB-5 · R.02 (LG-02)", day: "Fri", start: "11:30", end: "12:30", color: "from-violet-600 to-fuchsia-600" },
 
     { id: "s1", course: "DMS LAB + MINI PROJECT", location: "DMS Lab · L-03", day: "Sat", start: "09:00", end: "12:00", color: "from-indigo-600 to-blue-600" },
@@ -82,11 +83,11 @@ export default function Index() {
             <CardHeader className="pb-4">
               <CardTitle className="flex items-center justify-between">
                 <span>Class Timetable</span>
-                <AddClass onAdd={(s) => setSessions((prev) => [...prev, s])} />
+                <AddClass existingSessions={sessions} onAdd={(s) => setSessions((prev) => [...prev, s])} />
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <Timetable sessions={sessions} />
+              <Timetable sessions={sessions} onDelete={(id) => setSessions((prev) => prev.filter((s) => s.id !== id))} />
             </CardContent>
           </Card>
         </div>
@@ -208,7 +209,7 @@ function GradientOrbs() {
   );
 }
 
-function Timetable({ sessions }: { sessions: Session[] }) {
+function Timetable({ sessions, onDelete }: { sessions: Session[]; onDelete: (id: string) => void }) {
   const rows = (END_HOUR - START_HOUR) * 2; // 30-min increments
   const times: string[] = [];
   for (let h = START_HOUR; h <= END_HOUR; h++) {
@@ -265,12 +266,22 @@ function Timetable({ sessions }: { sessions: Session[] }) {
                   <div
                     key={s.id}
                     className={cn(
-                      "pointer-events-auto relative z-10 m-1 rounded-md p-2 text-xs text-white shadow-sm",
+                      "pointer-events-auto relative z-10 m-1 rounded-md p-2 pr-7 text-xs text-white shadow-sm",
                       "bg-gradient-to-br",
                       s.color,
                     )}
                     style={{ gridRow: `${start + 1} / span ${span}` }}
                   >
+                    <button
+                      className="absolute right-1 top-1 rounded-md px-2 py-1 text-white/80 hover:bg-black/20"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDelete(s.id);
+                      }}
+                      aria-label="Delete class"
+                    >
+                      ×
+                    </button>
                     <div className="font-semibold leading-tight">{s.course}</div>
                     <div className="opacity-90">{s.location}</div>
                     <div className="opacity-90">{s.start} – {s.end}</div>
@@ -284,7 +295,7 @@ function Timetable({ sessions }: { sessions: Session[] }) {
   );
 }
 
-function AddClass({ onAdd }: { onAdd: (s: Session) => void }) {
+function AddClass({ onAdd, existingSessions }: { onAdd: (s: Session) => void; existingSessions: Session[] }) {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState<
     Omit<Session, "id" | "color"> & { color: Session["color"] }
@@ -369,6 +380,23 @@ function AddClass({ onAdd }: { onAdd: (s: Session) => void }) {
         <DialogFooter>
           <Button
             onClick={() => {
+              // Basic validations
+              const validDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] as const;
+              if (!validDays.includes(form.day)) {
+                toast({ title: "Invalid day", description: "Use Mon/Tue/Wed/Thu/Fri/Sat" });
+                return;
+              }
+              const startIdx = timeToIndex(form.start);
+              const endIdx = timeToIndex(form.end);
+              if (isNaN(startIdx) || isNaN(endIdx) || endIdx <= startIdx) {
+                toast({ title: "Invalid time range", description: "End time must be after start time" });
+                return;
+              }
+              const conflict = existingSessions.find((x) => x.day === form.day && rangesOverlap(startIdx, endIdx, timeToIndex(x.start), timeToIndex(x.end)));
+              if (conflict) {
+                toast({ title: "Time slot conflict", description: `${form.day} ${form.start}-${form.end} overlaps with ${conflict.course} (${conflict.start}-${conflict.end})` });
+                return;
+              }
               const id = Math.random().toString(36).slice(2);
               const s: Session = { id, color: form.color, ...form } as Session;
               onAdd(s);
@@ -443,6 +471,10 @@ function AddEvent({
 function timeToIndex(time: string) {
   const [h, m] = time.split(":").map((x) => parseInt(x, 10));
   return (h - START_HOUR) * 2 + Math.round(m / 30);
+}
+
+function rangesOverlap(aStart: number, aEnd: number, bStart: number, bEnd: number) {
+  return aStart < bEnd && bStart < aEnd;
 }
 
 function toISO(d: Date) {
