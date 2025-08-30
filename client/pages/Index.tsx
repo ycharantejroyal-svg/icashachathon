@@ -31,51 +31,32 @@ const END_HOUR = 18;
 
 export default function Index() {
   const [sessions, setSessions] = useState<Session[]>([
-    {
-      id: "c1",
-      course: "Linear Algebra",
-      location: "Bldg A · 203",
-      day: "Mon",
-      start: "09:00",
-      end: "10:30",
-      color: "from-indigo-500 to-violet-500",
-    },
-    {
-      id: "c2",
-      course: "Data Structures",
-      location: "Bldg C · 105",
-      day: "Mon",
-      start: "13:00",
-      end: "15:00",
-      color: "from-emerald-500 to-teal-500",
-    },
-    {
-      id: "c3",
-      course: "Microeconomics",
-      location: "Bldg D · 410",
-      day: "Tue",
-      start: "10:00",
-      end: "11:30",
-      color: "from-sky-500 to-cyan-500",
-    },
-    {
-      id: "c4",
-      course: "Operating Systems",
-      location: "Bldg B · 118",
-      day: "Wed",
-      start: "14:00",
-      end: "16:00",
-      color: "from-fuchsia-500 to-pink-500",
-    },
-    {
-      id: "c5",
-      course: "Discrete Math",
-      location: "Bldg A · 008",
-      day: "Thu",
-      start: "11:00",
-      end: "12:30",
-      color: "from-amber-500 to-orange-500",
-    },
+    { id: "m1", course: "MATHS-III", location: "AB-5 · R.02 (LG-02)", day: "Mon", start: "09:00", end: "10:00", color: "from-violet-600 to-fuchsia-600" },
+    { id: "m2", course: "DAA", location: "AB-5 · R.02 (LG-02)", day: "Mon", start: "10:30", end: "11:30", color: "from-sky-500 to-cyan-500" },
+    { id: "m3", course: "ML", location: "AB-5 · R.02 (LG-02)", day: "Mon", start: "11:30", end: "12:30", color: "from-emerald-500 to-teal-500" },
+    { id: "m4", course: "SDOOP", location: "AB-5 · R.02 (LG-02)", day: "Mon", start: "14:00", end: "15:00", color: "from-rose-500 to-pink-500" },
+    { id: "m5", course: "DAP", location: "AB-5 · R.02 (LG-02)", day: "Mon", start: "15:30", end: "16:30", color: "from-amber-500 to-orange-500" },
+
+    { id: "t1", course: "SDOOP", location: "AB-5 · R.02 (LG-02)", day: "Tue", start: "08:00", end: "10:00", color: "from-rose-500 to-pink-500" },
+    { id: "t2", course: "MATHS-III", location: "AB-5 · R.02 (LG-02)", day: "Tue", start: "10:30", end: "11:30", color: "from-violet-600 to-fuchsia-600" },
+    { id: "t3", course: "DAA", location: "AB-5 · R.02 (LG-02)", day: "Tue", start: "11:30", end: "12:30", color: "from-sky-500 to-cyan-500" },
+    { id: "t4", course: "SDOOP LAB", location: "Sdoop Lab · L-03", day: "Tue", start: "15:30", end: "17:30", color: "from-rose-600 to-pink-600" },
+
+    { id: "w1", course: "ML", location: "AB-5 · R.02 (LG-02)", day: "Wed", start: "08:00", end: "09:00", color: "from-emerald-500 to-teal-500" },
+    { id: "w2", course: "DAP", location: "AB-5 · R.02 (LG-02)", day: "Wed", start: "10:30", end: "11:30", color: "from-amber-500 to-orange-500" },
+    { id: "w3", course: "DMS", location: "AB-5 · R.02 (LG-02)", day: "Wed", start: "11:30", end: "12:30", color: "from-indigo-500 to-blue-500" },
+
+    { id: "th1", course: "DAP", location: "AB-5 · R.02 (LG-02)", day: "Thu", start: "08:00", end: "09:00", color: "from-amber-500 to-orange-500" },
+    { id: "th2", course: "DAA", location: "AB-5 · R.02 (LG-02)", day: "Thu", start: "10:30", end: "11:30", color: "from-sky-500 to-cyan-500" },
+    { id: "th3", course: "DMS", location: "AB-5 · R.02 (LG-02)", day: "Thu", start: "13:00", end: "14:00", color: "from-indigo-500 to-blue-500" },
+    { id: "th4", course: "MATHS-III", location: "AB-5 · R.02 (LG-02)", day: "Thu", start: "14:00", end: "15:00", color: "from-violet-600 to-fuchsia-600" },
+    { id: "th5", course: "SDOOP", location: "AB-5 · R.02 (LG-02)", day: "Thu", start: "15:30", end: "16:30", color: "from-rose-500 to-pink-500" },
+
+    { id: "f1", course: "ML", location: "AB-5 · R.02 (LG-02)", day: "Fri", start: "08:00", end: "09:00", color: "from-emerald-500 to-teal-500" },
+    { id: "f2", course: "DMS", location: "AB-5 · R.02 (LG-02)", day: "Fri", start: "10:30", end: "11:30", color: "from-indigo-500 to-blue-500" },
+    { id: "f3", course: "MATHS-III", location: "AB-5 · R.02 (LG-02)", day: "Fri", start: "11:30", end: "12:30", color: "from-violet-600 to-fuchsia-600" },
+
+    { id: "s1", course: "DMS LAB + MINI PROJECT", location: "DMS Lab · L-03", day: "Sat", start: "09:00", end: "12:00", color: "from-indigo-600 to-blue-600" },
   ]);
 
   const [events, setEvents] = useState<UniEvent[]>([
