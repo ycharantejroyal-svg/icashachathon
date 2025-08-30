@@ -111,15 +111,17 @@ export default function Index() {
         <div id="timetable" className="md:col-span-3">
           <Card>
             <CardHeader className="pb-4">
-              <CardTitle className="flex items-center justify-between">
+              <CardTitle className="flex flex-wrap items-center justify-between gap-2">
                 <span>Class Timetable</span>
                 <div className="flex items-center gap-2">
+                  <Button size="sm" variant={plan === "III_CSE" ? "default" : "outline"} onClick={() => setPlan("III_CSE")}>III Sem (CSE)</Button>
+                  <Button size="sm" variant={plan === "I_SEM" ? "default" : "outline"} onClick={() => setPlan("I_SEM")}>I Sem</Button>
                   {!canEdit ? (
                     <Button size="sm" variant="outline" onClick={() => setAskPwdOpen(true)}>Unlock</Button>
                   ) : (
                     <Button size="sm" variant="outline" onClick={() => setCanEdit(false)}>Lock</Button>
                   )}
-                  <AddClass canEdit={canEdit} onRequireAuth={requireAuth} existingSessions={sessions} onAdd={(s) => setSessions((prev) => [...prev, s])} />
+                  <AddClass canEdit={canEdit} onRequireAuth={requireAuth} existingSessions={currentSessions} onAdd={(s) => (plan === "III_CSE" ? setSessions((prev) => [...prev, s]) : setISessions((prev) => [...prev, s]))} />
                 </div>
               </CardTitle>
             </CardHeader>
