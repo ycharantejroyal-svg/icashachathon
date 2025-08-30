@@ -25,7 +25,7 @@ type UniEvent = {
   time?: string; // HH:MM
 };
 
-const DAYS: Session["day"][] = ["Mon", "Tue", "Wed", "Thu", "Fri"];
+const DAYS: Session["day"][] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const START_HOUR = 8;
 const END_HOUR = 18;
 
