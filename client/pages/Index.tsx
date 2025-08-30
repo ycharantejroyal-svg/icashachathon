@@ -653,20 +653,32 @@ function getProvidedEvents(): UniEvent[] {
   ];
 }
 
-function SubjectsCard() {
-  const subjects = [
-    { code: "IMA 231", name: "MATHEMATICS – III" },
-    { code: "ICS 231", name: "DATABASE MANAGEMENT SYSTEMS" },
-    { code: "ICS 232", name: "SOFTWARE DESIGN USING OBJECT ORIENTED PARADIGM" },
-    { code: "ICS 233", name: "DESIGN AND ANALYSIS OF ALGORITHMS" },
-    { code: "ICS 234", name: "DATA ANALYTICS WITH PYTHON" },
-    { code: "ICS 235", name: "MACHINE LEARNING" },
-    { code: "ICS 231", name: "DMS LAB + MINI PROJECT" },
-    { code: "ICS 232", name: "SDOOP LAB" },
-  ];
+function SubjectsCard({ plan }: { plan: PlanKey }) {
+  const subjects =
+    plan === "III_CSE"
+      ? [
+          { code: "IMA 231", name: "MATHEMATICS – III" },
+          { code: "ICS 231", name: "DATABASE MANAGEMENT SYSTEMS" },
+          { code: "ICS 232", name: "SOFTWARE DESIGN USING OBJECT ORIENTED PARADIGM" },
+          { code: "ICS 233", name: "DESIGN AND ANALYSIS OF ALGORITHMS" },
+          { code: "ICS 234", name: "DATA ANALYTICS WITH PYTHON" },
+          { code: "ICS 235", name: "MACHINE LEARNING" },
+          { code: "ICS 231", name: "DMS LAB + MINI PROJECT" },
+          { code: "ICS 232", name: "SDOOP LAB" },
+        ]
+      : [
+          { code: "IHS 112", name: "COMMUNICATION SKILLS IN ENGLISH (CSIE)" },
+          { code: "IHS 111", name: "A COURSE ON PSYCHOLOGY FOR ENGINEERS (EPSY)" },
+          { code: "ICS 111", name: "PROBLEM SOLVING USING COMPUTERS (PSUC)" },
+          { code: "IMA 111", name: "MATHEMATICS – I" },
+          { code: "IPC 111", name: "PHYSICS – I" },
+          { code: "ICE 111", name: "MECHANICS OF SOLIDS (MOS)" },
+          { code: "ICS 111L", name: "PSUC LAB" },
+          { code: "IME 111L", name: "ENGINEERING GRAPHICS – I (LAB)" },
+        ];
   return (
-    <div className="rounded-lg border p-4">
-      <h4 className="mb-2 text-sm font-semibold">III Semester · CSE · Subjects</h4>
+    <div className="rounded-lg border bg-gradient-to-br from-primary/5 via-accent/5 to-transparent p-4">
+      <h4 className="mb-2 text-sm font-semibold">{plan === "III_CSE" ? "III Semester · CSE · Subjects" : "I Semester · Subjects"}</h4>
       <ul className="grid gap-1 text-sm md:grid-cols-2">
         {subjects.map((s) => (
           <li key={s.code + s.name} className="flex items-start gap-2">
@@ -675,7 +687,11 @@ function SubjectsCard() {
           </li>
         ))}
       </ul>
-      <p className="mt-3 text-xs text-muted-foreground">Lecture Hall: AB-5 · R. 02 (LG-02). Lab Location: SDOOP Lab and DMS Lab (Computing Lab-03, Floor-0).</p>
+      <p className="mt-3 text-xs text-muted-foreground">
+        {plan === "III_CSE"
+          ? "Lecture Hall: AB-5 · R. 02 (LG-02). Lab: SDOOP Lab and DMS Lab (Computing Lab-03, Floor-0)."
+          : "Lecture Hall: AB-5 · R.06 (LG-01). Labs: PSUC Lab (AB-5 1F), EG Lab (AB-5 R.06)."}
+      </p>
     </div>
   );
 }
