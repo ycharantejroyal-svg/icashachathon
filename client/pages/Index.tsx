@@ -347,7 +347,7 @@ function Timetable({ sessions, onDelete }: { sessions: Session[]; onDelete: (id:
                   <div
                     key={s.id}
                     className={cn(
-                      "pointer-events-auto relative z-10 m-1 rounded-md p-2 pr-7 text-xs text-white shadow-sm overflow-hidden",
+                      "pointer-events-auto relative z-10 m-1 rounded-md p-2 pr-7 text-xs text-white shadow-sm overflow-y-auto overflow-x-hidden break-words",
                       "bg-gradient-to-br",
                       s.color,
                     )}
@@ -363,7 +363,7 @@ function Timetable({ sessions, onDelete }: { sessions: Session[]; onDelete: (id:
                     >
                       ×
                     </button>
-                    <div className="font-semibold leading-tight truncate">{s.course}</div>
+                    <div className="font-semibold leading-tight whitespace-normal break-words">{s.course}</div>
                                         <div className="opacity-90">{formatTime(s.start)} – {formatTime(s.end)}</div>
                   </div>
                 );
