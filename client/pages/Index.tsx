@@ -39,6 +39,7 @@ export default function Index() {
     toast({ title: "Editing locked", description: "Enter password to make changes" });
     setAskPwdOpen(true);
   };
+  const [plan, setPlan] = useState<PlanKey>("III_CSE");
   const [sessions, setSessions] = useState<Session[]>([
     { id: "m1", course: "MATHS-III", location: "AB-5 · R.02 (LG-02)", day: "Mon", start: "09:00", end: "10:00", color: "from-violet-600 to-fuchsia-600" },
     { id: "m2", course: "DAA", location: "AB-5 · R.02 (LG-02)", day: "Mon", start: "10:30", end: "11:30", color: "from-sky-500 to-cyan-500" },
