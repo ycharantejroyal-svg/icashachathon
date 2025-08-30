@@ -191,7 +191,7 @@ export default function Index() {
                 </ul>
               </div>
 
-              <SubjectsCard />
+              <SubjectsCard plan={plan} />
             </CardContent>
           </Card>
         </div>
