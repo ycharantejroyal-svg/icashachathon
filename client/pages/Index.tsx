@@ -364,8 +364,7 @@ function Timetable({ sessions, onDelete }: { sessions: Session[]; onDelete: (id:
                       ×
                     </button>
                     <div className="font-semibold leading-tight truncate">{s.course}</div>
-                    <div className="opacity-90 truncate">{s.location}</div>
-                    <div className="opacity-90">{formatTime(s.start)} – {formatTime(s.end)}</div>
+                                        <div className="opacity-90">{formatTime(s.start)} – {formatTime(s.end)}</div>
                   </div>
                 );
               })}
