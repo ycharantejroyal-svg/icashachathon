@@ -303,7 +303,7 @@ function Timetable({ sessions, onDelete }: { sessions: Session[]; onDelete: (id:
   }, [sessions]);
 
   return (
-    <div className="grid grid-cols-[64px_repeat(5,1fr)] gap-2">
+    <div className="grid grid-cols-[64px_repeat(6,1fr)] gap-2">
       {/* Time column */}
       <div className="col-span-1">
         <div
