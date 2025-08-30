@@ -60,7 +60,7 @@ export default function Index() {
     { id: "th1", course: "DAP", location: "AB-5 · R.02 (LG-02)", day: "Thu", start: "08:00", end: "09:00", color: "from-amber-500 to-orange-500" },
     { id: "th2", course: "DAA", location: "AB-5 · R.02 (LG-02)", day: "Thu", start: "10:30", end: "11:30", color: "from-sky-500 to-cyan-500" },
     { id: "th3", course: "DMS", location: "AB-5 · R.02 (LG-02)", day: "Thu", start: "13:00", end: "14:00", color: "from-indigo-500 to-blue-500" },
-    { id: "th4", course: "MATHS-III", location: "AB-5 · R.02 (LG-02)", day: "Thu", start: "14:00", end: "15:00", color: "from-violet-600 to-fuchsia-600" },
+    { id: "th4", course: "MATHS-III", location: "AB-5 �� R.02 (LG-02)", day: "Thu", start: "14:00", end: "15:00", color: "from-violet-600 to-fuchsia-600" },
     { id: "th5", course: "SDOOP", location: "AB-5 · R.02 (LG-02)", day: "Thu", start: "15:30", end: "16:30", color: "from-rose-500 to-pink-500" },
 
     { id: "f1", course: "ML", location: "AB-5 · R.02 (LG-02)", day: "Fri", start: "08:00", end: "09:00", color: "from-emerald-500 to-teal-500" },
@@ -307,13 +307,14 @@ function Timetable({ sessions, onDelete }: { sessions: Session[]; onDelete: (id:
     <div className="grid grid-cols-[64px_repeat(6,1fr)] gap-2">
       {/* Time column */}
       <div className="col-span-1">
+        <div className="mb-2 text-center text-sm font-medium">&nbsp;</div>
         <div
           className="grid"
           style={{ gridTemplateRows: `repeat(${rows}, ${ROW_HEIGHT}px)` }}
         >
           {times.slice(0, -1).map((t, i) => (
             <div key={t} className="text-xs text-muted-foreground" style={{ gridRow: `${i * 2 + 1} / span 2` }}>
-              {t}
+              {formatTime(t)}
             </div>
           ))}
         </div>
@@ -346,7 +347,7 @@ function Timetable({ sessions, onDelete }: { sessions: Session[]; onDelete: (id:
                   <div
                     key={s.id}
                     className={cn(
-                      "pointer-events-auto relative z-10 m-1 rounded-md p-2 pr-7 text-xs text-white shadow-sm",
+                      "pointer-events-auto relative z-10 m-1 rounded-md p-2 pr-7 text-xs text-white shadow-sm overflow-hidden",
                       "bg-gradient-to-br",
                       s.color,
                     )}
@@ -362,9 +363,9 @@ function Timetable({ sessions, onDelete }: { sessions: Session[]; onDelete: (id:
                     >
                       ×
                     </button>
-                    <div className="font-semibold leading-tight">{s.course}</div>
-                    <div className="opacity-90">{s.location}</div>
-                    <div className="opacity-90">{s.start} – {s.end}</div>
+                    <div className="font-semibold leading-tight truncate">{s.course}</div>
+                    <div className="opacity-90 truncate">{s.location}</div>
+                    <div className="opacity-90">{formatTime(s.start)} – {formatTime(s.end)}</div>
                   </div>
                 );
               })}
@@ -565,6 +566,15 @@ function AddEvent({
 function timeToIndex(time: string) {
   const [h, m] = time.split(":").map((x) => parseInt(x, 10));
   return (h - START_HOUR) * 2 + Math.round(m / 30);
+}
+
+function formatTime(time: string) {
+  const [hStr, mStr] = time.split(":");
+  let h = parseInt(hStr, 10);
+  const m = parseInt(mStr, 10);
+  const period = h >= 12 ? "PM" : "AM";
+  h = ((h + 11) % 12) + 1;
+  return `${h}:${String(m).padStart(2, "0")} ${period}`;
 }
 
 function rangesOverlap(aStart: number, aEnd: number, bStart: number, bEnd: number) {
